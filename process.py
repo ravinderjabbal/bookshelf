@@ -1,4 +1,7 @@
+import save_data
 import support_selenium
+from ui_code import refresh_ui
+from datetime import date
 
 
 def processing_data(data):
@@ -32,8 +35,11 @@ def all_chapters(data_array):
 
 
 def update_details(websites_array, last_chapters_array):
-    for website in websites_array:
-        for chapter in last_chapters_array:
-            if support_selenium.is_new_chapter_available(website, chapter):
-                support_selenium.get_latest_chapter(website, chapter)
+    for i in range(0, len(websites_array)):
+        latest_chapter = support_selenium.is_new_chapter_available(websites_array[i], last_chapters_array[i])
+        if latest_chapter:
+            today_date = date.today()
+            save_data.update_data(websites_array[i], last_chapters_array[i] + 1, today_date)
+    support_selenium.tear_down()
+    refresh_ui()
     pass
